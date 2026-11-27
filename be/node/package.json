@@ -1,0 +1,21 @@
+{
+  "name": "food-order-api-node",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "migrate": "node-pg-migrate up --migrations-dir migrations --migration-file-language js",
+    "test": "node --test",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0"
+  }
+}

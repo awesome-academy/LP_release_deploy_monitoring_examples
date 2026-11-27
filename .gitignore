@@ -1,0 +1,24 @@
+# Thư mục sinh ra khi cài phụ thuộc hoặc build
+node_modules/
+vendor/
+target/
+dist/
+dist-ssr/
+.bundle/
+
+# File biến trên máy (chỉ file mẫu .env.example được đưa vào Git)
+.env
+.env.*
+!.env.example
+*.local
+
+# version.json do bước build ghi ra, không commit
+be/*/version.json
+
+# Log
+*.log
+
+# Editor, hệ điều hành
+.idea/
+.DS_Store
+Thumbs.db

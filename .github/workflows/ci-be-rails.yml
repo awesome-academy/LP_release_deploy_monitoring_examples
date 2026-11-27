@@ -1,0 +1,46 @@
+name: CI be/rails
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'be/rails/**'
+      - '.github/workflows/ci-be-rails.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'be/rails/**'
+      - '.github/workflows/ci-be-rails.yml'
+
+defaults:
+  run:
+    working-directory: be/rails
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ruby/setup-ruby@v1
+        with:
+          working-directory: be/rails
+          bundler-cache: true
+      - run: bin/rails db:test:prepare test
+        env:
+          PAYMENT_WALLET_API_KEY: ${{ secrets.PAYMENT_WALLET_API_KEY }}

@@ -1,0 +1,41 @@
+name: CI be/node
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'be/node/**'
+      - '.github/workflows/ci-be-node.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'be/node/**'
+      - '.github/workflows/ci-be-node.yml'
+
+defaults:
+  run:
+    working-directory: be/node
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+      - run: npm ci
+      - run: npm test
+        env:
+          PAYMENT_WALLET_API_KEY: ${{ secrets.PAYMENT_WALLET_API_KEY }}

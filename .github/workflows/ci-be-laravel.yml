@@ -1,0 +1,35 @@
+name: CI be/laravel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'be/laravel/**'
+      - '.github/workflows/ci-be-laravel.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'be/laravel/**'
+      - '.github/workflows/ci-be-laravel.yml'
+
+defaults:
+  run:
+    working-directory: be/laravel
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+      - run: composer install --no-interaction --no-progress
+        env:
+          PAYMENT_WALLET_API_KEY: ${{ secrets.PAYMENT_WALLET_API_KEY }}
+      - run: |
+          APP_KEY="base64:$(openssl rand -base64 32)"
+          export APP_KEY
+          php artisan test
+        env:
+          PAYMENT_WALLET_API_KEY: ${{ secrets.PAYMENT_WALLET_API_KEY }}

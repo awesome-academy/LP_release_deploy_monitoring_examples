@@ -1,0 +1,14 @@
+# Mẫu cấu hình cho gem figaro. Chép thành config/application.yml rồi sửa giá trị:
+#   cp config/application.yml.example config/application.yml
+# config/application.yml giữ giá trị trên máy bạn: đã có trong .gitignore và .dockerignore, không commit.
+# Khi Rails khởi động, figaro nạp từng khóa của file vào ENV, trước initializer và trước khi kết nối database.
+# Biến môi trường đặt sẵn (shell, CI, container) được giữ nguyên: figaro bỏ qua khóa trùng tên trong file.
+# Giá trị viết trong ngoặc kép. Khóa không có giá trị (PAYMENT_WALLET_API_KEY:) coi như không có khóa.
+# Cổng của bin/rails server không đọc từ file này: đặt PORT ở shell hoặc dùng bin/rails server -p.
+DATABASE_URL: "postgres://food_order:food_order_dev_pw@localhost:5432/food_order"
+# Tính năng "thanh toán bằng ví điện tử": API key (bí mật, chỉ phía server)
+PAYMENT_WALLET_API_KEY: "wallet_test_xxx"
+
+# Khối test ghi đè khóa chung khi chạy với RAILS_ENV=test: test dùng cơ sở dữ liệu riêng.
+test:
+  DATABASE_URL: "postgres://food_order:food_order_dev_pw@localhost:5432/api_rails_test"

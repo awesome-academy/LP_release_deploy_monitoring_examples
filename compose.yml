@@ -1,0 +1,21 @@
+name: food-order
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: food_order
+      POSTGRES_PASSWORD: food_order_dev_pw
+      POSTGRES_DB: food_order
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U food_order -d food_order"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  db-data:

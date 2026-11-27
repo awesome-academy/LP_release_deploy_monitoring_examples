@@ -1,0 +1,30 @@
+name: CI fe/vue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fe/vue/**'
+      - '.github/workflows/ci-fe-vue.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'fe/vue/**'
+      - '.github/workflows/ci-fe-vue.yml'
+
+defaults:
+  run:
+    working-directory: fe/vue
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+      - run: npm ci
+      - run: npx vitest run
+        env:
+          VITE_PAYMENT_WALLET_CLIENT_ID: ${{ vars.PAYMENT_WALLET_CLIENT_ID }}

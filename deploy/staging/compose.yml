@@ -1,0 +1,48 @@
+# Staging mẫu của hệ thống đặt đồ ăn: file do người phụ trách môi trường giữ.
+# Version của từng image lấy từ phien-ban.conf (script deploy-staging.sh cập nhật file này).
+# Image web đặt tên theo môi trường (web-staging; production dùng web-prod), image API dùng chung tên api.
+# Không mở cổng ra máy chủ; gọi thử bằng một container curl trong cùng mạng.
+name: staging-mau
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: food_order
+      POSTGRES_PASSWORD: staging_pw_xxx
+      POSTGRES_DB: food_order
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U food_order -d food_order"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  api:
+    image: registry.example.com/food-order/api:${API_VERSION:?thiếu API_VERSION}
+    environment:
+      PORT: "3000"
+      DATABASE_URL: postgres://food_order:staging_pw_xxx@db:5432/food_order
+      PAYMENT_WALLET_API_KEY: wallet_test_xxx
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:3000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    image: registry.example.com/food-order/web-staging:${WEB_VERSION:?thiếu WEB_VERSION}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/version.json"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  db-data:

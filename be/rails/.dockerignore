@@ -1,0 +1,9 @@
+.git
+.bundle
+.env*
+config/application.yml
+config/master.key
+config/credentials/*.key
+vendor/bundle
+log/*
+tmp/*

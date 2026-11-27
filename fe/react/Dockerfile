@@ -1,0 +1,2 @@
+FROM nginx:1.31-alpine
+COPY dist/ /usr/share/nginx/html/
