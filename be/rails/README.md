@@ -34,8 +34,8 @@ Khóa ví được kiểm trong `config/initializers/payment_wallet.rb`; sai th�
 | Không có khóa: file thiếu dòng, dòng không có giá trị (`PAYMENT_WALLET_API_KEY:`), hoặc không có file và môi trường không đặt biến | `Missing required configuration keys: ["PAYMENT_WALLET_API_KEY"] (Figaro::MissingKeys)` |
 | Khóa có nhưng rỗng: `PAYMENT_WALLET_API_KEY: ""` trong file, hoặc biến rỗng ở shell, ở job CI | `FATAL: PAYMENT_WALLET_API_KEY đang để trống (API key của ví điện tử). (RuntimeError)` |
 
-`Figaro.require_keys` chỉ kiểm khóa có trong `ENV` hay không, nên initializer kiểm thêm giá trị rỗng. Xem giá trị
-ứng dụng thực nhận: `bin/rails runner 'p ENV["PAYMENT_WALLET_API_KEY"]'`.
+`Figaro.require_keys` chỉ kiểm khóa có trong `ENV` hay không, nên initializer kiểm thêm giá trị rỗng. Kiểm ứng dụng
+đã nhận khóa mà không in giá trị ra màn hình: `bin/rails runner 'p ENV.key?("PAYMENT_WALLET_API_KEY")'` (in `true`).
 
 `config/master.key` không có trong repository; development và test không cần khóa này.
 
